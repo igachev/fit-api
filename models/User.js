@@ -33,7 +33,6 @@ gender: {
 
 profilePicture: {
     type: String,
-    required:[true,'image is required']
 },
 
 
