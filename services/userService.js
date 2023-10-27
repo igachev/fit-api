@@ -1,4 +1,6 @@
 const User = require('../models/User.js')
+const jwt = require('../promisifyToken/jsonwebtoken.js')
+const SECRET = process.env.JWT_SECRET
 
 exports.register = async (email,password) => {
     const user = await User.findOne({email})
@@ -24,8 +26,10 @@ exports.login = async (email,password) => {
         throw new Error('Invalid email or password!')
     }
 
+    const payload = {_id: user._id, email: user.email};
+    const token = await jwt.sign(payload, SECRET)
+    
     return {
-        userEmail: user.email,
-        _id: user._id
+        accessToken: token
     }
 }
