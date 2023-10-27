@@ -81,3 +81,13 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     const workout = await Workout.findByIdAndDelete(workoutId)
     return workout
   }
+
+  exports.editWorkoutName = async (workoutId,newWorkoutName) => {
+    const updatedWorkoutName = await Workout.findOneAndUpdate(
+        { _id: workoutId },
+        { $set: { name: newWorkoutName } },
+        { new: true }
+    );
+
+    return updatedWorkoutName
+  }
