@@ -43,6 +43,16 @@ router.get('/:workoutId', async (req,res) => {
     }
 })
 
+router.delete('/:workoutId', async (req,res) => {
+    const workoutId = req.params.workoutId;
+    try {
+        const result = await workoutService.deleteWorkout(workoutId)
+        res.status(200).json(result)
+    } catch (err) {
+        res.status(400).json({message: getErrorMessage(err)})
+    }
+})
+
 router.post('/:workoutId/addSet', async (req,res) => {
 const workoutId = req.params.workoutId
 const {nameOfExercise,setNumber,reps,weight,restTime} = req.body;

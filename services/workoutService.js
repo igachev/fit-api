@@ -76,3 +76,8 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     const workout = await Workout.findById(workoutId)
     return workout
   }
+
+  exports.deleteWorkout = async (workoutId) => {
+    const workout = await Workout.findByIdAndDelete(workoutId)
+    return workout
+  }
