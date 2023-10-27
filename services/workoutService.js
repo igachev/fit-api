@@ -71,3 +71,8 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     const workouts = await Workout.find({})
     return workouts
   }
+
+  exports.getOne = async (workoutId) => {
+    const workout = await Workout.findById(workoutId)
+    return workout
+  }

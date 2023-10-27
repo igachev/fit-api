@@ -33,6 +33,16 @@ try {
 }
 })
 
+router.get('/:workoutId', async (req,res) => {
+    const workoutId = req.params.workoutId;
+    try {
+        const result = await workoutService.getOne(workoutId)
+        res.status(200).json(result)
+    } catch (err) {
+        res.status(400).json({message: getErrorMessage(err)})
+    }
+})
+
 router.post('/:workoutId/addSet', async (req,res) => {
 const workoutId = req.params.workoutId
 const {nameOfExercise,setNumber,reps,weight,restTime} = req.body;
