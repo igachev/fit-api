@@ -25,7 +25,7 @@ exports.login = async (email,password) => {
     }
 
     return {
-        isLogged: true,
-        userEmail: user.email
+        userEmail: user.email,
+        _id: user._id
     }
 }
