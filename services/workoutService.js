@@ -36,7 +36,7 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     }
   };
 
-  exports.addSetToExercise = async (workoutId, exerciseName, setDetails) => {
+  exports.addSetToExercise = async (workoutId, exerciseId, setDetails) => {
     try {
       const workout = await Workout.findById(workoutId);
   
@@ -44,9 +44,7 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
         throw new Error('Workout not found');
       }
   
-      const exercise = workout.exercises.find(
-        (exercise) => exercise.exerciseName === exerciseName
-      );
+      const exercise = workout.exercises.id(exerciseId);
   
       if (!exercise) {
         throw new Error('Exercise not found');
