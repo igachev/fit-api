@@ -10,7 +10,7 @@ email: {
 
 name: {
     type: String,
-    required:[true,'name is required']
+    
 },
 
 password: {
@@ -20,17 +20,17 @@ password: {
 
 age: {
     type: Number,
-    required:[true,'age is required']
+   
 },
 
 height: {
     type: Number,
-    required:[true,'height is required']
+    
 },
 
 gender: {
     type: String,
-    required: true,
+    
     enum: {
         values: ["male", "female"],
         message: 'Invalid gender'
@@ -39,7 +39,7 @@ gender: {
 
 profilePicture: {
     type: String,
-    required:[true,'profile picture is required']
+    
 },
 
 
