@@ -44,7 +44,9 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
         throw new Error('Workout not found');
       }
   
-      const exercise = workout.exercises.id(exerciseId);
+      const exercise = workout.exercises.find(
+        (exercise) => exercise._id.toString() === exerciseId
+      );
   
       if (!exercise) {
         throw new Error('Exercise not found');
