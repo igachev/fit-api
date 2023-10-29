@@ -30,6 +30,61 @@ exports.login = async (email,password) => {
     const token = await jwt.sign(payload, SECRET)
     
     return {
+        userId: user._id,
         accessToken: token
     }
 }
+
+exports.updateUserProfile = async (userId, name, age, height, gender, profilePicture) => {
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            name: name,
+            age: age,
+            height: height,
+            gender: gender,
+            profilePicture: profilePicture,
+          },
+        },
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  exports.getUserProfile = async (userId) => {
+    try {
+      const user = await User.findById(userId).select('-password'); // Exclude the 'password' field
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  };
+ 
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  

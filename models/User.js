@@ -4,27 +4,33 @@ const bcrypt = require('bcrypt')
 const userSchema = new mongoose.Schema({
 
 email: {
-    type: String
+    type: String,
+    required:[true,'email is required']
 },
 
 name: {
-    type: String
+    type: String,
+    required:[true,'name is required']
 },
 
 password: {
-    type: String
+    type: String,
+    required:[true,'password is required']
 },
 
 age: {
-    type: Number
+    type: Number,
+    required:[true,'age is required']
 },
 
 height: {
-    type: Number
+    type: Number,
+    required:[true,'height is required']
 },
 
 gender: {
     type: String,
+    required: true,
     enum: {
         values: ["male", "female"],
         message: 'Invalid gender'
@@ -33,6 +39,7 @@ gender: {
 
 profilePicture: {
     type: String,
+    required:[true,'profile picture is required']
 },
 
 

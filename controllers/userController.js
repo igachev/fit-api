@@ -29,4 +29,36 @@ router.get('/logout', async(req,res) => {
     res.status(200).json({loggedOut: true})
 })
 
+router.get('/profile/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUserProfile(userId);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
+router.put('/profile/:userId', async (req, res) => {
+    try {
+      
+      const { name, age, height, gender, profilePicture } = req.body;
+  
+      const userId = req.params.userId;
+  
+      const result = await userService.updateUserProfile(
+        userId,
+        name,
+        age,
+        height,
+        gender,
+        profilePicture
+      );
+  
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
 module.exports = router;

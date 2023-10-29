@@ -64,6 +64,38 @@ router.put('/:workoutId', async (req,res) => {
     }
 })
 
+router.get('/:workoutId/exercises/:exerciseId',async (req,res) => {
+    const { workoutId, exerciseId } = req.params;
+    try {
+      const result = await workoutService.getExerciseById(workoutId, exerciseId);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+})
+
+router.delete('/:workoutId/exercises/:exerciseId', async (req, res) => {
+    const { workoutId, exerciseId } = req.params;
+    try {
+      const result = await workoutService.deleteExercise(workoutId, exerciseId);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
+  router.put('/:workoutId/exercises/:exerciseId', async (req, res) => {
+    const { workoutId, exerciseId } = req.params;
+    const {newExerciseImg,newExerciseName} = req.body;
+    let updatedExerciseDetails = {newExerciseImg,newExerciseName}
+    try {
+      const result = await workoutService.editExercise(workoutId, exerciseId, updatedExerciseDetails);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
 router.post('/:workoutId/addSet', async (req,res) => {
 const workoutId = req.params.workoutId
 const {nameOfExercise,setNumber,reps,weight,restTime} = req.body;
@@ -75,5 +107,25 @@ try {
     res.status(400).json({message: getErrorMessage(err)})
 }
 })
+
+router.get('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) => {
+    const { workoutId, exerciseId, setId } = req.params;
+    try {
+      const result = await workoutService.getSet(workoutId, exerciseId, setId);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
+router.delete('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) => {
+    const { workoutId, exerciseId, setId } = req.params;
+    try {
+      const result = await workoutService.deleteSet(workoutId, exerciseId, setId);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
 
 module.exports = router;
