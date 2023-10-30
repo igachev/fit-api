@@ -11,46 +11,9 @@ const workoutSchema = new mongoose.Schema({
 
   exercises: [
 
-    {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: setId, // Use the function to generate a new ObjectId
-      },
-      exerciseImg: {
-        type: String,
-        required: [true, 'exercise image is required'],
-      },
-      exerciseName: {
-        type: String,
-        required: [true, 'exercise name is required'],
-      },
-
-      sets: [
-        {
-          _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            default: setId, // Use the function to generate a new ObjectId
-          },
-          setNumber: {
-            type: Number,
-            required: [true, 'set number is required'],
-          },
-          reps: {
-            type: Number,
-            required: [true, 'reps are required'],
-          },
-          weight: {
-            type: Number,
-            required: [true, 'weight is required'],
-          },
-          restTime: {
-            type: String,
-            required: [true, 'rest time is required'],
-          },
-        },
-      ],
-      
-    },
+    {type: mongoose.Schema.Types.ObjectId,
+      ref: 'Exercise',
+    }
 
   ],
 });
