@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const workoutService = require('../services/workoutService.js')
+const exerciseService = require('../services/exerciseService.js')
 const {getErrorMessage} = require('../utils/errorMsg.js')
 
 router.get('/', async (req,res) => {
@@ -11,6 +12,8 @@ router.get('/', async (req,res) => {
     }
 })
 
+
+
 router.post('/addWorkout',async (req,res) => {
 const {workoutName} = req.body;
 try {
@@ -21,17 +24,6 @@ try {
 }
 })
 
-router.post('/:workoutId/addExercise',async (req,res) => {
-const workoutId = req.params.workoutId
-const {exerciseImg,exerciseName} = req.body;
-const exerciseDetails = {exerciseImg,exerciseName}
-try {
-    const result = await workoutService.addExerciseToWorkout(workoutId,exerciseDetails)
-    res.status(201).json(result)
-} catch (err) {
-    res.status(400).json({message: getErrorMessage(err)})
-}
-})
 
 router.get('/:workoutId', async (req,res) => {
     const workoutId = req.params.workoutId;
@@ -42,6 +34,31 @@ router.get('/:workoutId', async (req,res) => {
         res.status(400).json({message: getErrorMessage(err)})
     }
 })
+
+router.get('/:workoutId/filteredExercises', async (req,res) => {
+  const workoutId = req.params.workoutId;
+  let { muscleGroup } = req.query;
+  try {
+    const result = await exerciseService.filterByMuscleGroup(muscleGroup)
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(400).json({message: getErrorMessage(err)})
+  }
+
+})
+
+router.post('/:workoutId/addExercise',async (req,res) => {
+  const workoutId = req.params.workoutId
+  const {nameOfExercise,nameOfMuscleGroup,setNumber,reps,weight,restTime} = req.body;
+  const exerciseDetails = {nameOfExercise,nameOfMuscleGroup}
+  const setDetails = {setNumber,reps,weight,restTime}
+  try {
+      const result = await workoutService.addExerciseToWorkout(workoutId,exerciseDetails,setDetails)
+      res.status(201).json(result)
+  } catch (err) {
+      res.status(400).json({message: getErrorMessage(err)})
+  }
+  })
 
 router.delete('/:workoutId', async (req,res) => {
     const workoutId = req.params.workoutId;
@@ -64,15 +81,7 @@ router.put('/:workoutId', async (req,res) => {
     }
 })
 
-router.get('/:workoutId/exercises/:exerciseId',async (req,res) => {
-    const { workoutId, exerciseId } = req.params;
-    try {
-      const result = await workoutService.getExerciseById(workoutId, exerciseId);
-      res.status(200).json(result);
-    } catch (err) {
-      res.status(400).json({ message: getErrorMessage(err) });
-    }
-})
+
 
 router.delete('/:workoutId/exercises/:exerciseId', async (req, res) => {
     const { workoutId, exerciseId } = req.params;
@@ -84,40 +93,7 @@ router.delete('/:workoutId/exercises/:exerciseId', async (req, res) => {
     }
   });
 
-  router.put('/:workoutId/exercises/:exerciseId', async (req, res) => {
-    const { workoutId, exerciseId } = req.params;
-    const {newExerciseImg,newExerciseName} = req.body;
-    let updatedExerciseDetails = {newExerciseImg,newExerciseName}
-    try {
-      const result = await workoutService.editExercise(workoutId, exerciseId, updatedExerciseDetails);
-      res.status(200).json(result);
-    } catch (err) {
-      res.status(400).json({ message: getErrorMessage(err) });
-    }
-  });
-
-router.post('/:workoutId/exercises/:exerciseId/addSet', async (req,res) => {
-const workoutId = req.params.workoutId
-const exerciseId = req.params.exerciseId;
-const {setNumber,reps,weight,restTime} = req.body;
-const setDetails = {setNumber,reps,weight,restTime}
-try {
-    const result = await workoutService.addSetToExercise(workoutId,exerciseId,setDetails)
-    res.status(201).json(result)
-} catch (err) {
-    res.status(400).json({message: getErrorMessage(err)})
-}
-})
-
-router.get('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) => {
-    const { workoutId, exerciseId, setId } = req.params;
-    try {
-      const result = await workoutService.getSet(workoutId, exerciseId, setId);
-      res.status(200).json(result);
-    } catch (err) {
-      res.status(400).json({ message: getErrorMessage(err) });
-    }
-  });
+  
 
 router.delete('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) => {
     const { workoutId, exerciseId, setId } = req.params;
@@ -128,5 +104,7 @@ router.delete('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) 
       res.status(400).json({ message: getErrorMessage(err) });
     }
   });
+
+  
 
 module.exports = router;
