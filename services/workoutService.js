@@ -1,4 +1,5 @@
 const Workout = require('../models/Workout.js')
+const Exercise = require('../models/Exercise.js')
 
 exports.createWorkout = async (name) => {
 try {
@@ -14,62 +15,56 @@ try {
 }
 }
 
-exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
-    try {
-      const workout = await Workout.findById(workoutId);
-  
-      if (!workout) {
-        throw new Error('Workout not found');
-      }
-  
-      workout.exercises.push({
-        exerciseImg: exerciseDetails.exerciseImg,
-        exerciseName: exerciseDetails.exerciseName,
-        sets: [],
-      });
-  
-      const updatedWorkout = await workout.save();
-  
-      return updatedWorkout;
-    } catch (err) {
-      throw err;
-    }
-  };
+exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails) => {
+  try {
+    const workout = await Workout.findById(workoutId);
 
-  exports.addSetToExercise = async (workoutId, exerciseId, setDetails) => {
-    try {
-      const workout = await Workout.findById(workoutId);
-  
-      if (!workout) {
-        throw new Error('Workout not found');
-      }
-  
-      const exercise = workout.exercises.find(
-        (exercise) => exercise._id.toString() === exerciseId
-      );
-  
-      if (!exercise) {
-        throw new Error('Exercise not found');
-      }
-  
-      exercise.sets.push({
+    if (!workout) {
+      throw new Error('Workout not found');
+    }
+
+    // Check if an exercise with the same name already exists in the workout
+    const existingExercise = workout.exercises.find(
+      (exercise) => exercise.exerciseName === exerciseDetails.nameOfExercise
+    );
+
+    if (existingExercise) {
+      // If the exercise already exists, add the set to it
+      existingExercise.sets.push({
         setNumber: setDetails.setNumber,
         reps: setDetails.reps,
         weight: setDetails.weight,
         restTime: setDetails.restTime,
       });
-  
-      const updatedWorkout = await workout.save();
-  
-      return updatedWorkout;
-    } catch (err) {
-      throw err;
+    } else {
+      // If the exercise doesn't exist, create a new exercise
+      const newExercise = {
+        exerciseName: exerciseDetails.nameOfExercise,
+        muscleGroup: exerciseDetails.nameOfMuscleGroup,
+        sets: [
+          {
+            setNumber: setDetails.setNumber,
+            reps: setDetails.reps,
+            weight: setDetails.weight,
+            restTime: setDetails.restTime,
+          },
+        ],
+      };
+      workout.exercises.push(newExercise);
     }
-  };
+
+    const updatedWorkout = await workout.save();
+
+    return updatedWorkout;
+  } catch (err) {
+    throw err;
+  }
+};
+
 
   exports.getAll = async () => {
     const workouts = await Workout.find({})
-    return workouts
+    return workouts;
   }
 
   exports.getOne = async (workoutId) => {
@@ -92,25 +87,6 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     return updatedWorkoutName
   }
 
-  exports.getExerciseById = async (workoutId, exerciseId) => {
-    try {
-      const workout = await Workout.findById(workoutId);
-  
-      if (!workout) {
-        throw new Error('Workout not found');
-      }
-  
-      const exercise = workout.exercises.id(exerciseId);
-  
-      if (!exercise) {
-        throw new Error('Exercise not found');
-      }
-  
-      return exercise;
-    } catch (err) {
-      throw err;
-    }
-  };
 
   exports.deleteExercise = async (workoutId, exerciseId) => {
     try {
@@ -139,60 +115,6 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails) => {
     }
   };
 
-  exports.editExercise = async (workoutId, exerciseId, exerciseDetails) => {
-    try {
-      const workout = await Workout.findById(workoutId);
-  
-      if (!workout) {
-        throw new Error('Workout not found');
-      }
-  
-      const exercise = workout.exercises.find(
-        (exercise) => exercise._id.toString() === exerciseId
-      );
-  
-      if (!exercise) {
-        throw new Error('Exercise not found');
-      }
-  
-      exercise.exerciseImg = exerciseDetails.newExerciseImg;
-      exercise.exerciseName = exerciseDetails.newExerciseName;
-  
-      const updatedWorkout = await workout.save();
-  
-      return updatedWorkout;
-    } catch (err) {
-      throw err;
-    }
-  };
- 
-  exports.getSet = async (workoutId, exerciseId, setId) => {
-    try {
-      const workout = await Workout.findById(workoutId);
-  
-      if (!workout) {
-        throw new Error('Workout not found');
-      }
-  
-      const exercise = workout.exercises.find(
-        (exercise) => exercise._id.toString() === exerciseId
-      );
-  
-      if (!exercise) {
-        throw new Error('Exercise not found');
-      }
-  
-      const set = exercise.sets.find((s) => s._id.toString() === setId);
-  
-      if (!set) {
-        throw new Error('Set not found');
-      }
-  
-      return set;
-    } catch (err) {
-      throw err;
-    }
-  };
 
   exports.deleteSet = async (workoutId, exerciseId, setId) => {
     try {
