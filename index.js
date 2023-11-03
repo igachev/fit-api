@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express')
+const hateoasLinker = require('express-hateoas-links');
 const app = express()
 const cors = require('cors')
 const setupDatabase = require('./config/initDatabase.js')
@@ -9,6 +10,7 @@ const authMiddleware = require('./middlewares/authMiddleware.js')
 app.use(cors())
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
+app.use(hateoasLinker)
 app.use(authMiddleware.authentication)
 app.use(routes)
 

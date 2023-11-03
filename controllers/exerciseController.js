@@ -5,7 +5,11 @@ const {getErrorMessage} = require('../utils/errorMsg.js')
 router.get('/', async (req,res) => {
     try {
         const result = await exerciseService.getAll()
-        res.status(200).json(result)
+        const exercisesWithLinks = result.map((exercise) => ({
+            data:exercise,
+            links: createExerciseLinks(exercise._id),
+          }));
+          res.status(200).json(exercisesWithLinks);
     } catch (err) {
         res.status(400).json({message: getErrorMessage(err)})
     }
@@ -37,3 +41,10 @@ router.delete('/:exerciseId',async (req,res) => {
 
 
 module.exports = router
+
+function createExerciseLinks(exerciseId) {
+    return [
+      { rel: 'delete exercise from exercises', method: 'DELETE', href: `/exercises/${exerciseId}` },
+      { rel: 'add exercise to exercises', method: 'POST', href: `/exercises/create`}
+    ];
+  }
