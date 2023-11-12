@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
+const setId = () => new mongoose.Types.ObjectId();
+
 const userSchema = new mongoose.Schema({
 
 email: {
@@ -42,7 +44,24 @@ profilePicture: {
     
 },
 
+upcomingWorkouts: [
+    {
 
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            default: setId, // Use the function to generate a new ObjectId
+          },
+   workout: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Workout'
+    },
+    date: {
+        type: Date,
+        
+    }
+
+}
+]
 
 })
 

@@ -61,4 +61,56 @@ router.put('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.post('/:userId/addUpcomingWorkout',async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const {workoutName,date} = req.body;
+      const result = await userService.addUpcomingWorkout(userId,workoutName,date)
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.get('/:userId/getUpcomingWorkouts', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUpcomingWorkouts(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.get('/:userId/getCompletedWorkouts', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getCompletedWorkouts(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.delete('/:userId/workouts/:workoutId',async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const workoutId = req.params.workoutId;
+      const result = await userService.deleteWorkout(userId,workoutId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.get('/:userId/totalSets',async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.sumSetsByMuscleGroup(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
 module.exports = router;
