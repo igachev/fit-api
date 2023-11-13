@@ -11,7 +11,7 @@ exports.register = async (email,password) => {
     }
 
     await User.create({email,password})
-
+    return user;
 }
 
 exports.login = async (email,password) => {
@@ -77,42 +77,40 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
 
   exports.addUpcomingWorkout = async (userId, workoutName, date) => {
     try {
-      const user = await User.findById(userId).select('-password'); // Exclude the 'password' field
-      
+      const user = await User.findById(userId).select('-password');
       if (!user) {
         throw new Error('User not found');
       }
-
-      const workout = await Workout.findOne({name:workoutName})
-
-      if(!workout) {
-        throw new Error('Workout not found')
+  
+      const workout = await Workout.findOne({ name: workoutName });
+      if (!workout) {
+        throw new Error('Workout not found');
       }
-
+  
       const currentDate = new Date();
-
-      if (new Date(date).getTime() <= currentDate.getTime()) {
-      throw new Error('Date must be in the future');
+      const selectedDate = new Date(date);
+  
+      if (selectedDate.getTime() <= currentDate.getTime()) {
+        throw new Error('Date must be in the future');
       }
-
+  
       const upcomingWorkout = {
-        workout: { _id: workout._id},
-        date: date,
+        workout: { _id: workout._id },
+        date: selectedDate, 
       };
-
+  
       const update = {
         $push: {
-          upcomingWorkouts:upcomingWorkout
-        }
+          upcomingWorkouts: upcomingWorkout,
+        },
       };
-
+  
       const updatedUser = await User.findOneAndUpdate(
-        { _id: userId }, 
-        update, 
+        { _id: userId },
+         update, 
         { new: true });
-
-      return updatedUser
-
+  
+      return updatedUser;
     } catch (err) {
       throw err;
     }
