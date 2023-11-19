@@ -39,6 +39,15 @@ gender: {
      }
 },
 
+weightUnit: {
+    type: String,
+    enum: {
+      values: ['kg', 'lbs'],
+      message: 'Invalid weight unit',
+    },
+    default: 'kg', // Default to kg if not specified
+  },
+
 profilePicture: {
     type: String,
     

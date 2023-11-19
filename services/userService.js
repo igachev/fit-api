@@ -10,8 +10,8 @@ exports.register = async (email,password) => {
         throw new Error('User already exists!')
     }
 
-    await User.create({email,password})
-    return user;
+   const newUser = await User.create({email,password})
+    return newUser;
 }
 
 exports.login = async (email,password) => {
@@ -28,7 +28,7 @@ exports.login = async (email,password) => {
     }
 
     const payload = {_id: user._id, email: user.email};
-    const token = await jwt.sign(payload, SECRET)
+    const token = await jwt.sign(payload, SECRET,{ expiresIn: '20h' })
     
     return {
         userId: user._id,
@@ -205,7 +205,41 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
     }
   };
   
+  exports.getUserWeightUnit = async (userId) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user.weightUnit;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  exports.updateUserWeightUnit = async (userId, newWeightUnit) => {
+    try {
+      const update = {
+        $set: {
+          weightUnit: newWeightUnit,
+        },
+      };
   
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser;
+    } catch (err) {
+      throw err;
+    }
+  };
   
 
 

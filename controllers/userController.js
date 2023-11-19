@@ -113,4 +113,26 @@ router.put('/profile/:userId', async (req, res) => {
     }
   })
 
+  router.get('/:userId/weightUnit', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUserWeightUnit(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.put('/:userId/weightUnit', async (req, res) => {
+    const userId = req.params.userId;
+    const newWeightUnit = req.query.newWeightUnit;
+  
+    try {
+      const updatedUser = await userService.updateUserWeightUnit(userId, newWeightUnit);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
 module.exports = router;

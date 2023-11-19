@@ -1,12 +1,30 @@
 const router = require('express').Router()
 const workoutService = require('../services/workoutService.js')
 const exerciseService = require('../services/exerciseService.js')
+const userService = require('../services/userService.js')
 const {getErrorMessage} = require('../utils/errorMsg.js')
 
 router.get('/', async (req,res) => {
  
     try {
-        const result = await workoutService.getAll()
+      const userId = req.user?._id;
+      let userUnit;
+      let result;
+
+      if(userId) {
+         userUnit = await userService.getUserWeightUnit(userId)
+         if(userUnit === 'lbs') {
+          result = await workoutService.getAllInLbs()
+         }
+         else if(userUnit === 'kg') {
+          result = await workoutService.getAll()
+         }
+      }
+      else  {
+        result = await workoutService.getAll()
+      }
+
+        
         const workoutsWithLinks = result.map((workout) => ({
           data:workout,
           links: createWorkoutLinks(workout._id),
@@ -34,7 +52,22 @@ try {
 router.get('/:workoutId', async (req,res) => {
     const workoutId = req.params.workoutId;
     try {
-        const result = await workoutService.getOne(workoutId)
+      const userId = req.user?._id;
+      let userUnit;
+      let result;
+
+      if(userId) {
+         userUnit = await userService.getUserWeightUnit(userId)
+         if(userUnit === 'lbs') {
+          result = await workoutService.getOneInLbs(workoutId)
+         }
+         else if(userUnit === 'kg') {
+          result = await workoutService.getOne(workoutId)
+         }
+      }
+      else  {
+        result = await workoutService.getOne(workoutId)
+      }
         let exerciseLinks = createExerciseLinks(workoutId,result.exercises[0]._id,result.exercises[0].sets[0]._id)
         res.status(200).json(result,exerciseLinks)
     } catch (err) {

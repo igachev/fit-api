@@ -67,9 +67,44 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails) =>
     return workouts;
   }
 
+
+  function convertKgToLbs(weight) {
+     let lbs = weight * 2.20462262;
+     return lbs
+  }
+
+  exports.getAllInLbs = async () => {
+    try {
+      
+      const workouts = await Workout.find({});
+  
+      workouts.forEach((workout) => {
+        workout.exercises.forEach((exercise) => {
+          exercise.sets.forEach((set) => {
+            set.weight = convertKgToLbs(set.weight);
+          });
+        });
+      });
+  
+      return workouts;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   exports.getOne = async (workoutId) => {
     const workout = await Workout.findById(workoutId)
     return workout
+  }
+
+  exports.getOneInLbs = async (workoutId) => {
+    const workout = await Workout.findById(workoutId)
+    workout.exercises.forEach((exercise) => {
+      exercise.sets.forEach((set) => {
+        set.weight = convertKgToLbs(set.weight);
+      });
+    });
+    return workout;
   }
 
   exports.deleteWorkout = async (workoutId) => {
