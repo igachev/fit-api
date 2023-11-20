@@ -241,9 +241,41 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
     }
   };
   
+  exports.getUserThemeMode = async (userId) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user.themeMode;
+    } catch (err) {
+      throw err;
+    }
+  };
 
-
+  exports.updateUserThemeMode = async (userId, newThemeMode) => {
+    try {
+      const update = {
+        $set: {
+          themeMode: newThemeMode,
+        },
+      };
   
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser;
+    } catch (err) {
+      throw err;
+    }
+  };
   
   
   

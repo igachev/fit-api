@@ -135,4 +135,26 @@ router.put('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.get('/:userId/themeMode', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUserThemeMode(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.put('/:userId/themeMode', async (req, res) => {
+    const userId = req.params.userId;
+    const newThemeMode = req.query.newThemeMode;
+  
+    try {
+      const updatedUser = await userService.updateUserThemeMode(userId, newThemeMode);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
 module.exports = router;

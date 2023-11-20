@@ -48,6 +48,15 @@ weightUnit: {
     default: 'kg', // Default to kg if not specified
   },
 
+  themeMode: {
+    type: String,
+    enum: {
+        values: ['light','dark'],
+        message: 'Invalid theme color'
+    },
+    default: 'light'
+  },
+
 profilePicture: {
     type: String,
     
