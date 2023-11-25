@@ -106,7 +106,8 @@ router.put('/profile/:userId', async (req, res) => {
   router.get('/:userId/totalSets',async (req,res) => {
     try {
       const userId = req.params.userId;
-      const result = await userService.sumSetsByMuscleGroup(userId)
+      const timePeriod = req.query.timePeriod
+      const result = await userService.sumSetsByMuscleGroup(userId,timePeriod)
       res.status(200).json(result)
     } catch (err) {
       res.status(400).json({ message: getErrorMessage(err) });

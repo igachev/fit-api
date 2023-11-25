@@ -179,22 +179,54 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
       throw err;
     }
   }
-  
-  exports.sumSetsByMuscleGroup = async (userId) => {
+
+  exports.sumSetsByMuscleGroup = async (userId, timePeriod) => {
     try {
-     
       const workouts = await this.getCompletedWorkouts(userId);
       const setsByMuscleGroup = {};
   
-      for (const workout of workouts) {
-        for (const exercise of workout.workout.exercises) {
-          const muscleGroup = exercise.muscleGroup;
-          const setsCount = exercise.sets.length;
+      const currentDate = new Date();
   
-          if (!setsByMuscleGroup[muscleGroup]) {
-            setsByMuscleGroup[muscleGroup] = setsCount;
-          } else {
-            setsByMuscleGroup[muscleGroup] += setsCount;
+      let startDate;
+
+      switch (timePeriod) {
+
+        case 'week':
+          startDate = new Date(currentDate);
+          startDate.setDate(currentDate.getDate() - 7);
+          break;
+
+        case 'month':
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 1);
+          break;
+
+        case 'threeMonths':
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 3);
+          break;
+
+        case 'year':
+          startDate = new Date(currentDate);
+          startDate.setFullYear(currentDate.getFullYear() - 1);
+          break;
+
+        default:
+          throw new Error('Invalid time period');
+      }
+  
+      for (const workout of workouts) {
+        // Check if the workout falls within the specified time period
+        if (workout.date >= startDate && workout.date <= currentDate) {
+          for (const exercise of workout.workout.exercises) {
+            const muscleGroup = exercise.muscleGroup;
+            const setsCount = exercise.sets.length;
+  
+            if (!setsByMuscleGroup[muscleGroup]) {
+              setsByMuscleGroup[muscleGroup] = setsCount;
+            } else {
+              setsByMuscleGroup[muscleGroup] += setsCount;
+            }
           }
         }
       }
