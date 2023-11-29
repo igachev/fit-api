@@ -1,6 +1,6 @@
 const nodemailer = required("nodemailer");
 
-const sendEmail = async (email, subject, payload) => {
+exports.sendEmail = async (email, subject, payload) => {
 
     const transporter = nodemailer.createTransport({
         host: "smtp.abv.bg",
@@ -35,4 +35,3 @@ const sendEmail = async (email, subject, payload) => {
     await transporter.sendMail(options);
 }
 
-export default sendEmail;
