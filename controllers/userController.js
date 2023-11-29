@@ -158,4 +158,27 @@ router.put('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.post('/requestResetPassword', async(req,res) => {
+    const {email} = req.body;
+    console.log(req)
+
+    try {
+        const result = await userService.requestResetPassword(email)
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(400).json({message: getErrorMessage(err)})
+    }
+})
+
+router.post('/resetPassword', async(req, res) => {
+  const {userId, token, password} = req.body;
+
+  try {
+      const result = await userService.resetPassword(userId, token, password)
+      res.status(200).json(result);
+  } catch (err) {
+      res.status(400).json({message: getErrorMessage(err)})
+  }
+})
+
 module.exports = router;

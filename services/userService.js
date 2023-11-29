@@ -2,6 +2,10 @@ const User = require('../models/User.js')
 const Workout = require('../models/Workout.js')
 const jwt = require('../promisifyToken/jsonwebtoken.js')
 const SECRET = process.env.JWT_SECRET
+const ResetPasswordToken = require("../models/ResetPasswordToken.js");
+const sendEmail = require("../utils/sendEmail.jsx");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 exports.register = async (email,password) => {
     const user = await User.findOne({email})
@@ -13,6 +17,64 @@ exports.register = async (email,password) => {
    const newUser = await User.create({email,password})
     return newUser;
 }
+
+exports.requestResetPassword = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) throw new Error("User with this email does not exist");
+
+  let token = await ResetPasswordToken.findOne({ userId: user._id });
+  if (token) await token.deleteOne();
+
+  let resetToken = crypto.randomBytes(32).toString("hex");
+  const hash = await bcrypt.hash(resetToken, 10);
+
+  await ResetPasswordToken.create({
+    userId: user._id,
+    token: hash,
+    createdAt: Date.now(),
+  });
+
+  const link = `https://fit-api-ehu5.onrender.com/login?token=${resetToken}&id=${user._id}&popupResetPassword=${true}`;
+
+  sendEmail(
+    email,
+    "Password Reset Request",
+    {
+      name: user.name || "User",
+      link: link,
+    }
+  );
+
+  return {link}
+};
+
+exports.resetPassword = async (userId, token, password) => {
+  let resetPasswordToken = await ResetPasswordToken.findOne({ userId });
+
+  if (!resetPasswordToken) {
+    throw new Error("Invalid or expired password reset token");
+  }
+
+  console.log(resetPasswordToken.token, token);
+
+  const isValid = await bcrypt.compare(token, resetPasswordToken.token);
+
+  if (!isValid) {
+    throw new Error("Invalid or expired password reset token");
+  }
+
+  const hash = await bcrypt.hash(password, 10);
+
+  await User.updateOne(
+    { _id: userId },
+    { $set: { password: hash } },
+    { new: true }
+  );
+
+  await resetPasswordToken.deleteOne();
+
+  return { message: "Password reset was successful" };
+};
 
 exports.login = async (email,password) => {
     const user = await User.findOne({email})
