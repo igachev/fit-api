@@ -3,7 +3,7 @@ const Workout = require('../models/Workout.js')
 const jwt = require('../promisifyToken/jsonwebtoken.js')
 const SECRET = process.env.JWT_SECRET
 const ResetPasswordToken = require("../models/ResetPasswordToken.js");
-const sendEmail = require("../utils/sendEmail.js");
+const {sendEmail} = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
