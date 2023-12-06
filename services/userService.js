@@ -34,18 +34,18 @@ exports.requestResetPassword = async (email) => {
     createdAt: Date.now(),
   });
 
-  const link = `https://fit-api-ehu5.onrender.com/login?token=${resetToken}&id=${user._id}&popupResetPassword=${true}`;
+  const link = `http://localhost:3000/login?token=${resetToken}&id=${user._id}&popupResetPassword=${true}`;
 
-  sendEmail(
+  return sendEmail(
     email,
     "Password Reset Request",
     {
       name: user.name || "User",
       link: link,
     }
-  );
+  ).then(data => data)
 
-  return {link}
+  
 };
 
 exports.resetPassword = async (userId, token, password) => {
