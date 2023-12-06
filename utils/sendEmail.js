@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 
-exports.sendEmail = async (email, subject, payload) => {
+exports.sendEmail = (email, subject, payload) => {
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.abv.bg",
+        host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: {
@@ -20,8 +20,8 @@ exports.sendEmail = async (email, subject, payload) => {
     <div>
         <p>Hi, ${payload.name}.</p>
         <p>You requested to reset your password.</p>
-        <p> Please, click the link below in next 15 minutes to reset your password.</p>
-        <a href="${payload.link}">Reset password</a>,
+        <p>Please, click the link below in the next 15 minutes to reset it.</p>
+        <a href="${payload.link}">Reset password</a>
     </div>`;
 
     const options = {
@@ -32,6 +32,6 @@ exports.sendEmail = async (email, subject, payload) => {
 
     };
 
-    await transporter.sendMail(options);
+    return transporter.sendMail(options);
 }
 
