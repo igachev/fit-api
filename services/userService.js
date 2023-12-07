@@ -371,7 +371,132 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
     }
   };
   
+  exports.addProgressData = async (userId, measurements) => {
+    try {
+      const currentDate = new Date();
+      const total = calculateTotal(measurements);
   
+      const progressData = {
+        currentWeight: measurements.currentWeight,
+        date: currentDate,
+        total,
+        upperBody: { ...measurements.upperBody },
+        arms: { ...measurements.arms },
+        middleBody: { ...measurements.middleBody },
+        legs: { ...measurements.legs },
+        foldThickness: { ...measurements.foldThickness },
+      };
   
+      const update = {
+        $push: {
+          progress: progressData,
+        },
+      };
   
+      const options = { new: true };
   
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        options
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser.progress;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  function calculateTotal(measurements) {
+    const upperBodyTotal =
+      measurements.upperBody.neck +
+      measurements.upperBody.shoulders +
+      measurements.upperBody.chest;
+  
+    const armsTotal =
+      measurements.arms.arm +
+      measurements.arms.forearm +
+      measurements.arms.wrist;
+  
+    const middleBodyTotal =
+      measurements.middleBody.waist + measurements.middleBody.hips;
+  
+    const legsTotal =
+      measurements.legs.thigh + measurements.legs.calf + measurements.legs.ankle;
+  
+    const foldThicknessTotal =
+      measurements.foldThickness.abdominal +
+      measurements.foldThickness.thigh +
+      measurements.foldThickness.triceps +
+      measurements.foldThickness.pelvicBone;
+  
+    return (
+      upperBodyTotal +
+      armsTotal +
+      middleBodyTotal +
+      legsTotal +
+      foldThicknessTotal
+    );
+  }
+  
+  exports.getProgressData = async (userId) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      return user.progress;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  exports.getOneProgress = async(userId,progressId) => {
+    try {
+
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const progressEntry = user.progress.id(progressId);
+
+    if (!progressEntry) {
+      throw new Error('Progress entry not found');
+    }
+
+    return progressEntry;
+
+    } catch (err) {
+      throw(err)
+    }
+  }
+  
+  exports.deleteOneProgress = async (userId, progressId) => {
+    try {
+      const update = {
+        $pull: {
+          progress: { _id: progressId },
+        },
+      };
+  
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser;
+    } catch (err) {
+      throw err;
+    }
+  };

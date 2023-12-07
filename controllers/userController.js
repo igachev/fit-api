@@ -158,6 +158,49 @@ router.put('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.post('/:userId/addProgress', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const {measurements} = req.body;
+     // console.log(measurements)
+      const result = await userService.addProgressData(userId, measurements);
+  
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
+  router.get('/:userId/progress', async (req,res) => {
+    const userId = req.params.userId;
+    try {
+      const result = await userService.getProgressData(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.get('/:userId/oneProgress/:progressId', async (req,res) => {
+    const {userId,progressId} = req.params;
+    try {
+      const result = await userService.getOneProgress(userId,progressId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.delete('/:userId/oneProgress/:progressId', async (req,res) => {
+    const {userId,progressId} = req.params;
+    try {
+      const result = await userService.deleteOneProgress(userId,progressId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
   router.post('/requestResetPassword', async(req,res) => {
     const {email} = req.body;
     console.log(req)

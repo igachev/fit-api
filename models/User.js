@@ -79,6 +79,87 @@ upcomingWorkouts: [
     }
 
 }
+],
+
+progress: [
+    {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            default: setId, // Use the function to generate a new ObjectId
+          },
+          date: {
+            type: Date
+          },
+          total: {
+            type: Number
+          },
+          currentWeight: {
+            type: Number
+          },
+         upperBody: {
+            neck: {
+                type: Number
+              },
+              shoulders: {
+                type: Number
+              },
+              chest: {
+                type: Number
+              },
+         },
+
+         arms: {
+            arm: {
+                type: Number
+              },
+              forearm: {
+                type: Number
+              },
+              wrist: {
+                type: Number
+              },
+         },
+
+         middleBody: {
+            waist: {
+                type: Number
+              },
+              hips: {
+                type: Number
+              },
+         },
+
+         legs: {
+            thigh: {
+                type: Number
+            },
+            calf: {
+                type: Number
+            },
+            ankle: {
+                type: Number
+            }
+         },
+
+         foldThickness: {
+            abdominal: {
+                type: Number
+            },
+            thigh: {
+                type: Number
+            },
+            triceps: {
+                type: Number
+            },
+            pelvicBone: {
+                type: Number
+            },
+            fats: {
+                type: Number
+            }
+         }
+
+    }
 ]
 
 })
