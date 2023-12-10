@@ -39,6 +39,10 @@ gender: {
      }
 },
 
+weight: {
+  type: Number
+},
+
 weightUnit: {
     type: String,
     enum: {

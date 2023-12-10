@@ -98,7 +98,7 @@ exports.login = async (email,password) => {
     }
 }
 
-exports.updateUserProfile = async (userId, name, age, height, gender, profilePicture) => {
+exports.updateUserProfile = async (userId, name, age, height, gender, weight, profilePicture) => {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: userId },
@@ -108,6 +108,7 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
             age: age,
             height: height,
             gender: gender,
+            weight: weight,
             profilePicture: profilePicture,
           },
         },
@@ -391,6 +392,9 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
         $push: {
           progress: progressData,
         },
+        $set: {
+          weight: measurements.currentWeight,
+        },
       };
   
       const options = { new: true };
@@ -446,11 +450,14 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
   exports.getProgressData = async (userId) => {
     try {
       const user = await User.findById(userId);
+  
       if (!user) {
         throw new Error('User not found');
       }
   
-      return user.progress;
+      const sortedProgress = user.progress.sort((a, b) => a.date - b.date);
+  
+      return sortedProgress;
     } catch (err) {
       throw err;
     }
@@ -496,6 +503,69 @@ exports.updateUserProfile = async (userId, name, age, height, gender, profilePic
       }
   
       return updatedUser;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  exports.sumSetsByDateAndMuscleGroup = async (userId, timePeriod) => {
+    try {
+      const workouts = await this.getCompletedWorkouts(userId);
+      const setsByDateAndMuscleGroup = {};
+  
+      const currentDate = new Date();
+      let startDate;
+  
+      switch (timePeriod) {
+        case 'week':
+          startDate = new Date(currentDate);
+          startDate.setDate(currentDate.getDate() - 7);
+          break;
+  
+        case 'month':
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 1);
+          break;
+  
+        case 'threeMonths':
+          startDate = new Date(currentDate);
+          startDate.setMonth(currentDate.getMonth() - 3);
+          break;
+  
+        case 'year':
+          startDate = new Date(currentDate);
+          startDate.setFullYear(currentDate.getFullYear() - 1);
+          break;
+  
+        default:
+          throw new Error('Invalid time period');
+      }
+  
+      for (const workout of workouts) {
+        // Check if the workout falls within the specified time period
+        if (workout.date >= startDate && workout.date <= currentDate) {
+          // Format the date to ignore the time component (considering only date)
+          const workoutDate = workout.date.toISOString().split('T')[0];
+  
+          // Initialize the sets count for the date if not exists
+          if (!setsByDateAndMuscleGroup[workoutDate]) {
+            setsByDateAndMuscleGroup[workoutDate] = {};
+          }
+  
+          // Sum the sets count for each muscle group for the date
+          for (const exercise of workout.workout.exercises) {
+            const muscleGroup = exercise.muscleGroup;
+  
+            if (!setsByDateAndMuscleGroup[workoutDate][muscleGroup]) {
+              setsByDateAndMuscleGroup[workoutDate][muscleGroup] = 0;
+            }
+  
+            setsByDateAndMuscleGroup[workoutDate][muscleGroup] += exercise.sets.length;
+          }
+        }
+      }
+  
+      return setsByDateAndMuscleGroup;
     } catch (err) {
       throw err;
     }

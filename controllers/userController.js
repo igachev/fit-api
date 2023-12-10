@@ -42,7 +42,7 @@ router.get('/profile/:userId', async (req, res) => {
 router.put('/profile/:userId', async (req, res) => {
     try {
       
-      const { name, age, height, gender, profilePicture } = req.body;
+      const { name, age, height, gender, weight, profilePicture } = req.body;
   
       const userId = req.params.userId;
   
@@ -52,6 +52,7 @@ router.put('/profile/:userId', async (req, res) => {
         age,
         height,
         gender,
+        weight,
         profilePicture
       );
   
@@ -108,6 +109,17 @@ router.put('/profile/:userId', async (req, res) => {
       const userId = req.params.userId;
       const timePeriod = req.query.timePeriod
       const result = await userService.sumSetsByMuscleGroup(userId,timePeriod)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.get('/:userId/totalSetsByDate', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const timePeriod = req.query.timePeriod
+      const result = await userService.sumSetsByDateAndMuscleGroup(userId,timePeriod)
       res.status(200).json(result)
     } catch (err) {
       res.status(400).json({ message: getErrorMessage(err) });
