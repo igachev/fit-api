@@ -283,7 +283,8 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
         if (
           workout.date >= startDate &&
           workout.date <= currentDate &&
-          workout.workout // Check if the workout is not deleted
+          workout.workout && // Check if the workout is not deleted
+          workout.workout.exercises // Check if exercises are available
         ) {
           for (const exercise of workout.workout.exercises) {
             const muscleGroup = exercise.muscleGroup;
