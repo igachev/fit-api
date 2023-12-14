@@ -279,16 +279,19 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
       }
   
       for (const workout of workouts) {
-        // Check if the workout falls within the specified time period
-        if (workout.date >= startDate && workout.date <= currentDate) {
-          for (const exercise of workout.workout.exercises) {
-            const muscleGroup = exercise.muscleGroup;
-            const setsCount = exercise.sets.length;
+        // Check if the workout is not null or undefined
+        if (workout && workout.workout) {
+          // Check if the workout falls within the specified time period
+          if (workout.date >= startDate && workout.date <= currentDate) {
+            for (const exercise of workout.workout.exercises) {
+              const muscleGroup = exercise.muscleGroup;
+              const setsCount = exercise.sets.length;
   
-            if (!setsByMuscleGroup[muscleGroup]) {
-              setsByMuscleGroup[muscleGroup] = setsCount;
-            } else {
-              setsByMuscleGroup[muscleGroup] += setsCount;
+              if (!setsByMuscleGroup[muscleGroup]) {
+                setsByMuscleGroup[muscleGroup] = setsCount;
+              } else {
+                setsByMuscleGroup[muscleGroup] += setsCount;
+              }
             }
           }
         }
