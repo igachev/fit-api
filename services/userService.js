@@ -548,7 +548,12 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
   
       for (const workout of workouts) {
         // Check if the workout falls within the specified time period
-        if (workout.date >= startDate && workout.date <= currentDate) {
+        if (
+          workout.date >= startDate &&
+          workout.date <= currentDate &&
+          workout.workout && // Check if the workout is not deleted
+          workout.workout.exercises // Check if exercises are available
+        ) {
           // Format the date to ignore the time component (considering only date)
           const workoutDate = workout.date.toISOString().split('T')[0];
   
