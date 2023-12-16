@@ -69,7 +69,7 @@ router.get('/:workoutId', async (req,res) => {
         result = await workoutService.getOne(workoutId)
       }
         let exerciseLinks = createExerciseLinks(workoutId,result.exercises[0]._id,result.exercises[0].sets[0]._id)
-        res.status(200).json(result,exerciseLinks)
+        res.status(200).json({ result, exerciseLinks })
     } catch (err) {
         res.status(400).json({message: getErrorMessage(err)})
     }
