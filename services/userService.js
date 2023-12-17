@@ -6,6 +6,7 @@ const ResetPasswordToken = require("../models/ResetPasswordToken.js");
 const {sendEmail} = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
 
 exports.register = async (email,password) => {
     const user = await User.findOne({email})
@@ -96,6 +97,32 @@ exports.login = async (email,password) => {
         userId: user._id,
         accessToken: token
     }
+}
+
+exports.googleLogin = async (googleToken) => {
+  const { email } = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${googleToken}`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response.json();
+  })
+
+  let user = await User.findOne({ email })
+
+  if (!user) {
+    const password = Math.random().toString(16).slice(2);
+    user = await User.create({ email, password })
+  }
+
+  const payload = { _id: user._id, email };
+  const token = await jwt.sign(payload, SECRET, { expiresIn: '20h' })
+
+  return {
+    userId: user._id,
+    accessToken: token
+  }
+
 }
 
 exports.updateUserProfile = async (userId, name, age, height, gender, weight, profilePicture) => {
