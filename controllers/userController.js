@@ -25,6 +25,18 @@ router.post('/login', async(req,res) => {
     }
 })
 
+router.post('/googleLogin', async(req,res) => {
+  const { access_token } = req.body;
+
+  try {
+      const result = await userService.googleLogin(access_token)
+      res.status(200).json(result)
+  } catch (err) {
+      res.status(400).json({message: getErrorMessage(err)})
+  }
+
+})
+
 router.get('/logout', async(req,res) => {
     res.status(200).json({loggedOut: true})
 })
