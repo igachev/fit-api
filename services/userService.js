@@ -100,7 +100,7 @@ exports.login = async (email,password) => {
 }
 
 exports.googleLogin = async (googleToken) => {
-  const { email } = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${googleToken}`)
+  const { email, name, picture } = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${googleToken}`)
   .then(response => {
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -112,7 +112,7 @@ exports.googleLogin = async (googleToken) => {
 
   if (!user) {
     const password = Math.random().toString(16).slice(2);
-    user = await User.create({ email, password })
+    user = await User.create({ email, password, name, profilePicture: picture})
   }
 
   const payload = { _id: user._id, email };
