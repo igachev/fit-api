@@ -1,10 +1,11 @@
 const Workout = require('../models/Workout.js')
 const Exercise = require('../models/Exercise.js')
 
-exports.createWorkout = async (name) => {
+exports.createWorkout = async (name,userId) => {
 try {
     const workout = new Workout({
         name,
+        authorId: userId,
         exercises: [],
       });
   
@@ -15,12 +16,19 @@ try {
 }
 }
 
-exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails) => {
+exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails,userId) => {
   try {
     const workout = await Workout.findById(workoutId);
 
     if (!workout) {
       throw new Error('Workout not found');
+    }
+
+    const authorId = workout.authorId.toString();
+    const isOwner = userId === authorId
+
+    if(!isOwner) {
+      throw new Error('only the author of this workout can add exercises')
     }
 
     // Check if an exercise with the same name already exists in the workout
@@ -107,29 +115,61 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails) =>
     return workout;
   }
 
-  exports.deleteWorkout = async (workoutId) => {
-    const workout = await Workout.findByIdAndDelete(workoutId)
-    return workout
+  exports.deleteWorkout = async (workoutId,userId) => {
+
+    try {
+    const workout = await Workout.findById(workoutId);
+    const authorId = workout.authorId.toString();
+    const isOwner = userId === authorId
+
+    if(!isOwner) {
+      throw new Error('only the author of this workout can delete it')
+    }
+    const deletedWorkout = await Workout.findByIdAndDelete(workoutId)
+    return deletedWorkout
+    } catch (err) {
+      throw err
+    }
   }
 
-  exports.editWorkoutName = async (workoutId,newWorkoutName) => {
-    const updatedWorkoutName = await Workout.findOneAndUpdate(
+  exports.editWorkoutName = async (workoutId,newWorkoutName,userId) => {
+    try {
+
+    const workout = await Workout.findById(workoutId);
+    const authorId = workout.authorId.toString();
+    const isOwner = userId === authorId
+
+    if(!isOwner) {
+      throw new Error('only the author of this workout can edit it')
+    }
+
+      const updatedWorkoutName = await Workout.findOneAndUpdate(
         { _id: workoutId },
         { $set: { name: newWorkoutName } },
         { new: true }
     );
 
     return updatedWorkoutName
+    } catch (err) {
+      throw(err)
+    }
   }
 
 
-  exports.deleteExercise = async (workoutId, exerciseId) => {
+  exports.deleteExercise = async (workoutId, exerciseId,userId) => {
     try {
       const workout = await Workout.findById(workoutId);
   
       if (!workout) {
         throw new Error('Workout not found');
       }
+
+    const authorId = workout.authorId.toString();
+    const isOwner = userId === authorId
+
+    if(!isOwner) {
+      throw new Error('only the author of this workout can delete exercises')
+    }
   
       const exerciseIndex = workout.exercises.findIndex(
         (exercise) => exercise._id.toString() === exerciseId
@@ -151,13 +191,20 @@ exports.addExerciseToWorkout = async (workoutId, exerciseDetails, setDetails) =>
   };
 
 
-  exports.deleteSet = async (workoutId, exerciseId, setId) => {
+  exports.deleteSet = async (workoutId, exerciseId, setId,userId) => {
     try {
       const workout = await Workout.findById(workoutId);
   
       if (!workout) {
         throw new Error('Workout not found');
       }
+
+    const authorId = workout.authorId.toString();
+    const isOwner = userId === authorId
+
+    if(!isOwner) {
+      throw new Error('only the author of this workout can delete sets')
+    }
   
       const exercise = workout.exercises.find(
         (exercise) => exercise._id.toString() === exerciseId

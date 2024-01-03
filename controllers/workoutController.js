@@ -39,9 +39,10 @@ router.get('/', async (req,res) => {
 
 router.post('/addWorkout',async (req,res) => {
 const {workoutName} = req.body;
+const userId = req.user?._id;
 
 try {
-    const result = await workoutService.createWorkout(workoutName)
+    const result = await workoutService.createWorkout(workoutName,userId)
     res.status(201).json(result)
 } catch (err) {
     res.status(400).json({message: getErrorMessage(err)})
@@ -93,8 +94,9 @@ router.post('/:workoutId/addExercise',async (req,res) => {
   const {nameOfExercise,nameOfMuscleGroup,setNumber,reps,weight,restTime} = req.body;
   const exerciseDetails = {nameOfExercise,nameOfMuscleGroup}
   const setDetails = {setNumber,reps,weight,restTime}
+  const userId = req.user?._id;
   try {
-      const result = await workoutService.addExerciseToWorkout(workoutId,exerciseDetails,setDetails)
+      const result = await workoutService.addExerciseToWorkout(workoutId,exerciseDetails,setDetails,userId)
       
       res.status(201).json(result);
   
@@ -105,8 +107,9 @@ router.post('/:workoutId/addExercise',async (req,res) => {
 
 router.delete('/:workoutId', async (req,res) => {
     const workoutId = req.params.workoutId;
+    const userId = req.user?._id;
     try {
-        const result = await workoutService.deleteWorkout(workoutId)
+        const result = await workoutService.deleteWorkout(workoutId,userId)
         res.status(200).json(result)
     } catch (err) {
         res.status(400).json({message: getErrorMessage(err)})
@@ -116,8 +119,10 @@ router.delete('/:workoutId', async (req,res) => {
 router.put('/:workoutId', async (req,res) => {
     const workoutId = req.params.workoutId;
     const {newWorkoutName} = req.body;
+    const userId = req.user?._id;
+
     try {
-        const result = await workoutService.editWorkoutName(workoutId,newWorkoutName)
+        const result = await workoutService.editWorkoutName(workoutId,newWorkoutName,userId)
         res.status(200).json(result)
     } catch (err) {
         res.status(400).json({message: getErrorMessage(err)})
@@ -128,8 +133,9 @@ router.put('/:workoutId', async (req,res) => {
 
 router.delete('/:workoutId/exercises/:exerciseId', async (req, res) => {
     const { workoutId, exerciseId } = req.params;
+    const userId = req.user?._id;
     try {
-      const result = await workoutService.deleteExercise(workoutId, exerciseId);
+      const result = await workoutService.deleteExercise(workoutId, exerciseId,userId);
       res.status(200).json(result);
      
     } catch (err) {
@@ -141,8 +147,9 @@ router.delete('/:workoutId/exercises/:exerciseId', async (req, res) => {
 
 router.delete('/:workoutId/exercises/:exerciseId/sets/:setId', async (req, res) => {
     const { workoutId, exerciseId, setId } = req.params;
+    const userId = req.user?._id;
     try {
-      const result = await workoutService.deleteSet(workoutId, exerciseId, setId);
+      const result = await workoutService.deleteSet(workoutId, exerciseId, setId,userId);
       res.status(200).json(result);
     } catch (err) {
       res.status(400).json({ message: getErrorMessage(err) });

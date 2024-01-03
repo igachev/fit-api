@@ -7,6 +7,9 @@ const workoutSchema = new mongoose.Schema({
     type: String,
     required: [true, 'workout name is required'],
   },
+  authorId: {
+    type: mongoose.Types.ObjectId
+  },
   exercises: [
     {
       _id: {
