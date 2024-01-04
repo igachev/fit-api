@@ -7,27 +7,31 @@ const userSchema = new mongoose.Schema({
 
 email: {
     type: String,
-    required:[true,'email is required']
+    required:[true,'email is required'],
+    minLength: [5, 'Email must be at least 5 characters long'],
+    maxLength: [60, 'Email must be less than or equal to 60 characters long']
 },
 
 name: {
     type: String,
-    
+    maxLength: [60,'User Name must be less than 60 characters long']
 },
 
 password: {
     type: String,
-    required:[true,'password is required']
+    required:[true,'password is required'],
+    minLength: [4, 'Password must be at least 4 characters long'],
+    maxLength: [10,'Password must be less than or equal to 10 characters long']
 },
 
 age: {
     type: Number,
-   
+    max: [120,'Age must be less than 120']
 },
 
 height: {
     type: Number,
-    
+    max: [300,'Height must be less than 300 cm']
 },
 
 gender: {
@@ -40,7 +44,8 @@ gender: {
 },
 
 weight: {
-  type: Number
+  type: Number,
+  max: [400, 'Weight must be less than 400 kg']
 },
 
 weightUnit: {
