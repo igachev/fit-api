@@ -72,10 +72,6 @@ workoutSchema.path('exercises').validate(function (value) {
   return value.length >= 0 && value.length <= 30;
 }, 'Exercises list must be between 0 and 30 exercises');
 
-// Custom validator for the length of the sets array within each exercise
-workoutSchema.path('exercises.$[].sets').validate(function (value) {
-  return value.length >= 0 && value.length <= 10;
-}, 'Sets list within each exercise must be between 0 and 10 sets');
 
 const Workout = mongoose.model('Workout', workoutSchema);
 
