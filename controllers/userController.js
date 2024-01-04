@@ -1,6 +1,10 @@
 const router = require('express').Router()
 const userService = require('../services/userService.js')
 const {getErrorMessage} = require('../utils/errorMsg.js')
+const Multer = require("multer");
+const upload = Multer({
+  storage: new Multer.memoryStorage()
+});
 
 router.post('/register', async(req,res) => {
     const {email,password} = req.body;
@@ -51,10 +55,10 @@ router.get('/profile/:userId', async (req, res) => {
     }
   });
 
-router.put('/profile/:userId', async (req, res) => {
+  router.put('/profile/:userId', upload.single("image"), async (req, res) => {
     try {
-      
-      const { name, age, height, gender, weight, profilePicture } = req.body;
+      const image = req.file;
+      const { name, age, height, gender, weight, profilePicture } = JSON.parse(req.body.data);
   
       const userId = req.params.userId;
   
@@ -65,7 +69,8 @@ router.put('/profile/:userId', async (req, res) => {
         height,
         gender,
         weight,
-        profilePicture
+        profilePicture,
+        image
       );
   
       res.status(200).json(result);

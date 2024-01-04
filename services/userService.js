@@ -7,6 +7,7 @@ const {sendEmail} = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const fetch = require("node-fetch");
+const {uploadImage} = require("../utils/uploadImage.js");
 
 exports.register = async (email,password) => {
     const user = await User.findOne({email})
@@ -125,8 +126,14 @@ exports.googleLogin = async (googleToken) => {
 
 }
 
-exports.updateUserProfile = async (userId, name, age, height, gender, weight, profilePicture) => {
-    try {
+exports.updateUserProfile = async (userId, name, age, height, gender, weight, profilePicture, image) => {
+  try {
+    if(image){
+      const b64 = Buffer.from(image.buffer).toString("base64");
+      const dataURI = "data:" + image.mimetype + ";base64," + b64;
+      const {secure_url} = await uploadImage(dataURI);
+      profilePicture = secure_url;
+    }
       const updatedUser = await User.findOneAndUpdate(
         { _id: userId },
         {
