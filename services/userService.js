@@ -410,6 +410,44 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
       throw err;
     }
   };
+
+  exports.getUserSoundMode = async (userId) => {
+    try {
+      const user = await User.findById(userId)
+      if(!user) {
+        throw new Error('User not found')
+      }
+      return user.soundMode;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  exports.updateUserSoundMode = async (userId,newSoundMode) => {
+    try {
+
+      const update = {
+        $set: {
+          soundMode: newSoundMode,
+        },
+      };
+
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return updatedUser;
+
+    } catch (err) {
+      throw err;
+    }
+  }
   
   exports.addProgressData = async (userId, measurements) => {
     try {

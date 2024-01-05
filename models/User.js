@@ -66,6 +66,15 @@ weightUnit: {
     default: 'light'
   },
 
+  soundMode: {
+    type: String,
+    enum: {
+      values: ['on','off'],
+      message: 'Invalid sound mode'
+    },
+    default: 'off'
+  },
+
 profilePicture: {
     type: String,
     

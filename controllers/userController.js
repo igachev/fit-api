@@ -187,6 +187,28 @@ router.get('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.get('/:userId/soundMode', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUserSoundMode(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.put('/:userId/soundMode', async (req, res) => {
+    const userId = req.params.userId;
+    const newSoundMode = req.query.newSoundMode;
+  
+    try {
+      const updatedUser = await userService.updateUserSoundMode(userId, newSoundMode);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
   router.post('/:userId/addProgress', async (req, res) => {
     try {
       const userId = req.params.userId;
