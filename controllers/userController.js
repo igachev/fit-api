@@ -209,6 +209,28 @@ router.get('/profile/:userId', async (req, res) => {
     }
   });
 
+  router.get('/:userId/tipsMode', async (req,res) => {
+    try {
+      const userId = req.params.userId;
+      const result = await userService.getUserTipsMode(userId)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  })
+
+  router.put('/:userId/tipsMode', async (req, res) => {
+    const userId = req.params.userId;
+    const newTipsMode = req.query.newTipsMode;
+  
+    try {
+      const updatedUser = await userService.updateUserTipsMode(userId, newTipsMode);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(400).json({ message: getErrorMessage(err) });
+    }
+  });
+
   router.post('/:userId/addProgress', async (req, res) => {
     try {
       const userId = req.params.userId;

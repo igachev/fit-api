@@ -75,6 +75,15 @@ weightUnit: {
     default: 'off'
   },
 
+  tipsMode: {
+    type: String,
+    enum: {
+      values:['on','off'],
+      message: 'Invalid tips mode'
+    },
+    default: 'off'
+  },
+
 profilePicture: {
     type: String,
     
