@@ -45,7 +45,15 @@ gender: {
 
 weight: {
   type: Number,
-  max: [400, 'Weight must be less than 400 kg']
+  validate: {
+    validator: function (value) {
+      if (this.getUpdate().$set.weightUnit == "kg") {
+        return value <= 400;
+      }
+      return value <= 881;
+    },
+    message: `Weight must be less than 400 kg / 881 lbs`,
+  }
 },
 
 weightUnit: {
@@ -194,13 +202,13 @@ progress: [
 userSchema.pre('save', async function() {
     this.password = await bcrypt.hash(this.password,10)
     })
-    
+
     userSchema.methods.validatePassword = async function(password) {
         const result = await bcrypt.compare(password, this.password);
         return result;
     }
     
-    
+
     const User = mongoose.model('User',userSchema)
     
     module.exports = User;

@@ -126,7 +126,7 @@ exports.googleLogin = async (googleToken) => {
 
 }
 
-exports.updateUserProfile = async (userId, name, age, height, gender, weight, profilePicture, image) => {
+exports.updateUserProfile = async (userId, name, age, height, gender, weight, weightUnit, profilePicture, image) => {
   try {
     if(image){
       const b64 = Buffer.from(image.buffer).toString("base64");
@@ -143,10 +143,11 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
             height: height,
             gender: gender,
             weight: weight,
+            weightUnit: weightUnit,
             profilePicture: profilePicture,
           },
         },
-        { new: true } // Return the updated document
+        { runValidators: true, new: true } // Return the updated document
       );
   
       if (!updatedUser) {
@@ -353,9 +354,14 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
 
   exports.updateUserWeightUnit = async (userId, newWeightUnit) => {
     try {
+      const { weight } = await User.findOne(
+        { _id: userId }
+      );
+
       const update = {
         $set: {
           weightUnit: newWeightUnit,
+          weight: newWeightUnit == "kg" ? Number(Math.round(weight / 2.2046)) : Number(Math.round(weight * 2.2046)),
         },
       };
   
