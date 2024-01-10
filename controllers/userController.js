@@ -58,7 +58,7 @@ router.get('/profile/:userId', async (req, res) => {
   router.put('/profile/:userId', upload.single("image"), async (req, res) => {
     try {
       const image = req.file;
-      const { name, age, height, gender, weight, profilePicture } = JSON.parse(req.body.data);
+      const { name, age, height, gender, weight, weightUnit, profilePicture } = JSON.parse(req.body.data);
   
       const userId = req.params.userId;
   
@@ -69,6 +69,7 @@ router.get('/profile/:userId', async (req, res) => {
         height,
         gender,
         weight,
+        weightUnit,
         profilePicture,
         image
       );
