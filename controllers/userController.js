@@ -297,4 +297,28 @@ router.post('/resetPassword', async(req, res) => {
   }
 })
 
+router.get('/userSettings', async(req,res) => {
+  const userId = req.user?._id;
+
+  try {
+    const result = await userService.getUserSettings(userId)
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(400).json({message: getErrorMessage(err)})
+  }
+})
+
+router.put('/userSettings',async(req,res) => {
+  const userId = req.user?._id;
+  const {weightUnit,themeMode,tipsMode,soundMode} = req.query
+
+  try {
+    const newUserSettings = {weightUnit,themeMode,tipsMode,soundMode}
+    const result = await userService.updateUserSettings(userId,newUserSettings)
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(400).json({message: getErrorMessage(err)})
+  }
+})
+
 module.exports = router;

@@ -690,3 +690,56 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, pr
       throw err;
     }
   };
+
+  exports.getUserSettings = async (userId) => {
+    try {
+      const user = await User.findById(userId)
+        .select('soundMode tipsMode themeMode weightUnit')
+      //  .select('-password');
+  
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      return {
+        soundMode: user.soundMode,
+        tipsMode: user.tipsMode,
+        themeMode: user.themeMode,
+        weightUnit: user.weightUnit,
+      };
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  exports.updateUserSettings = async (userId, newSettings) => {
+    try {
+      const update = {
+        $set: {
+          weightUnit: newSettings.weightUnit,
+          themeMode: newSettings.themeMode,
+          soundMode: newSettings.soundMode,
+          tipsMode: newSettings.tipsMode
+        }
+      };
+  
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        { new: true }
+      ).select('soundMode tipsMode themeMode weightUnit');
+  
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+  
+      return {
+        soundMode: updatedUser.soundMode,
+        tipsMode: updatedUser.tipsMode,
+        themeMode: updatedUser.themeMode,
+        weightUnit: updatedUser.weightUnit,
+      };
+    } catch (err) {
+      throw err;
+    }
+  };
