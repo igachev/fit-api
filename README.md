@@ -1,5 +1,28 @@
 # fit-api
 
+## Back-end documentation:
+
+<p>This application is built with Node.js , Express , MongoDB with mongoose</p>
+
+
+### Requirements:
+- "bcrypt": "^5.1.1",
+- "cloudinary": "^1.41.1",
+- "cors": "^2.8.5",
+- "dotenv": "^16.3.1",
+- "express": "^4.18.2",
+- "express-hateoas-links": "^1.3.1",
+- "jsonwebtoken": "^9.0.2",
+- "mongoose": "^7.6.3",
+- "multer": "^1.4.5-lts.1",
+- "nodemailer": "^6.9.7"
+
+
+### Configuration:
+This application uses `.env` file to store configuration variables.You can create `.env` file in the main directory(next to `package.json` file) of the project and add the following variables:
+
+
+
 
 ### Usage:
 
@@ -24,6 +47,14 @@ The server listens on port 5000 by default. Here are the endpoints:
 - `GET /users/:userId/totalSetsByDate?timePeriod=month` : returns object which contains the date of the completed workout and total sets for each muscle group within the last month (use them in progress diagram)
 - `GET /users/:userId/totalSetsByDate?timePeriod=threeMonths` : returns object which contains the date of the completed workout and total sets for each muscle group within the last three months (use them in progress diagram)
 - `GET /users/:userId/totalSetsByDate?timePeriod=year` : returns object which contains the date of the completed workout and total sets for each muscle group within the last year (use them in progress diagram)
+- `GET /users/userSettings` : returns user's selected settings:themeMode : dark/light,weightUnit : kg/lbs,tipsMode : on/off,soundMode : on/off
+- `PUT /users/userSettings` : edits user's settings
+- `POST /users/:userId/addProgress` : adds progress record for the specified user
+- `GET /users/:userId/progress` : returns all progress records for the specified user
+- `GET /users/:userId/oneProgress/:progressId` : returns single progress record details
+- `DELETE /users/:userId/oneProgress/:progressId` : deletes the specified progress record from the user's list of progress records
+- `POST /users/requestResetPassword` : sends confirmation email for resetting password
+- `POST /users/resetPassword` : reset user's password and adds the new password
 - `GET /workouts` : returns all workouts
 - `POST /workouts/addWorkout` : Add new workout and the name of this workout
 - `GET /workouts/:workoutId` : Returns a specified workout
@@ -39,7 +70,7 @@ The server listens on port 5000 by default. Here are the endpoints:
 ### Error Handling:
 
 <p>if there is an error it is returned as { message }</p>
-
+<p>Example: {message: "Invalid email or password!" }</p>
 
 ### Folder Structure:
 - `models` : Contains the database models
