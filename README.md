@@ -2,7 +2,7 @@
 
 ## Back-end documentation:
 
-<p>This application is built with Node.js , Express , MongoDB with mongoose</p>
+<p>This application is built with Node.js , Express , MongoDB with mongoose , MongoDB Atlas</p>
 
 
 ### Requirements:
@@ -22,6 +22,12 @@
 This application uses `.env` file to store configuration variables.You can create `.env` file in the main directory(next to `package.json` file) of the project and add the following variables:
 
 
+### Installation:
+1. Clone this repository `git clone https://github.com/react-redux-fitbyside/react.git`
+2. Go to folder fit-api: `cd fit-api`
+3. Install dependencies: `npm install`
+4. Make sure you created <strong>.env</strong> file in the main directory and populate it with correct variables
+5. Start the server: `npm start`
 
 
 ### Usage:
