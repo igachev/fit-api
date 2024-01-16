@@ -2,7 +2,17 @@
 
 ## Back-end documentation:
 
-<p>This application is built with Node.js , Express , MongoDB with mongoose , MongoDB Atlas</p>
+<p>This application is built with <strong>Node.js</strong> , <strong>Express</strong> , <strong>MongoDB with mongoose</strong> , <strong>MongoDB Atlas</strong></p>
+
+
+<h2>Link To Fit API: https://fit-api-ehu5.onrender.com</h2>
+
+
+### Test Accounts:
+`Account with data:` - email : `miro@abv.bg` password : `1234`
+
+`Account without data:` - email : `test@abv.bg` password : `1234`
+
 
 
 ### Requirements:
@@ -20,6 +30,22 @@
 
 ### Configuration:
 This application uses `.env` file to store configuration variables.You can create `.env` file in the main directory(next to `package.json` file) of the project and add the following variables:
+
+DATABASE_DEVELOPMENT=
+
+DATABASE_PRODUCTION=
+
+JWT_SECRET=
+
+ADMIN_EMAIL=
+
+ADMIN_EMAIL_PASS=
+
+CLOUD_NAME=
+
+CLOUD_API_KEY=
+
+CLOUD_API_SECRET=
 
 
 ### Installation:
