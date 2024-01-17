@@ -3,6 +3,7 @@ const workoutService = require('../services/workoutService.js')
 const exerciseService = require('../services/exerciseService.js')
 const userService = require('../services/userService.js')
 const {getErrorMessage} = require('../utils/errorMsg.js')
+const authMiddleware = require('../middlewares/authMiddleware.js')
 
 router.get('/', async (req,res) => {
  
@@ -37,7 +38,7 @@ router.get('/', async (req,res) => {
 
 
 
-router.post('/addWorkout',async (req,res) => {
+router.post('/addWorkout', authMiddleware.isAuthorized, async (req,res) => {
 const {workoutName} = req.body;
 const userId = req.user?._id;
 
