@@ -361,7 +361,7 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, we
       const update = {
         $set: {
           weightUnit: newWeightUnit,
-          weight: newWeightUnit == "kg" ? Number(Math.round(weight / 2.2046)) : Number(Math.round(weight * 2.2046)),
+          weight: newWeightUnit == "kg" ? Number((weight / 2.20462262).toFixed(1)) : Number((weight * 2.20462262).toFixed(1)),
         },
       };
   
@@ -720,9 +720,14 @@ exports.updateUserProfile = async (userId, name, age, height, gender, weight, we
 
   exports.updateUserSettings = async (userId, newSettings) => {
     try {
+      const { weight } = await User.findOne(
+        { _id: userId }
+      );
+
       const update = {
         $set: {
           weightUnit: newSettings.weightUnit,
+          weight: newSettings.weightUnit == "kg" ? Number((weight / 2.20462262).toFixed(1)) : Number((weight * 2.20462262).toFixed(1)),
           themeMode: newSettings.themeMode,
           soundMode: newSettings.soundMode,
           tipsMode: newSettings.tipsMode
