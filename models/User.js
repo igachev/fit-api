@@ -5,58 +5,67 @@ const setId = () => new mongoose.Types.ObjectId();
 
 const userSchema = new mongoose.Schema({
 
-email: {
+  email: {
     type: String,
-    required:[true,'email is required'],
+    required: [true, 'email is required'],
     minLength: [5, 'Email must be at least 5 characters long'],
     maxLength: [60, 'Email must be less than or equal to 60 characters long']
-},
+  },
 
-name: {
+  name: {
     type: String,
-    maxLength: [60,'User Name must be less than 60 characters long']
-},
+    maxLength: [60, 'User Name must be less than 60 characters long']
+  },
 
-password: {
+  password: {
     type: String,
-    required:[true,'password is required'],
+    required: [true, 'password is required'],
     minLength: [4, 'Password must be at least 4 characters long'],
-    maxLength: [10,'Password must be less than or equal to 10 characters long']
-},
+    maxLength: [10, 'Password must be less than or equal to 10 characters long']
+  },
 
-age: {
+  age: {
     type: Number,
-    max: [120,'Age must be less than 120']
-},
+    max: [120, 'Age must be less than 120']
+  },
 
-height: {
+  height: {
     type: Number,
-    max: [300,'Height must be less than 300 cm']
-},
+    max: [300, 'Height must be less than 300 cm']
+  },
 
-gender: {
+  gender: {
     type: String,
-    
+
     enum: {
-        values: ["male", "female"],
-        message: 'Invalid gender'
-     }
-},
+      values: ["male", "female"],
+      message: 'Invalid gender'
+    }
+  },
 
-weight: {
-  type: Number,
-  validate: {
-    validator: function (value) {
-      if (this.getUpdate().$set.weightUnit == "kg") {
-        return value <= 400;
+  weight: {
+    type: Number,
+    validate: [
+      {
+        validator: function (value) {
+          if (this.getUpdate().$set.weightUnit == "kg") {
+            return value <= 400;
+          }
+        },
+        message: "Weight must be less than 400 kg"
+      },
+      {
+        validator: function (value) {
+          if (this.getUpdate().$set.weightUnit == "lbs") {
+            return value <= 881;
+          }
+        },
+        message: "Weight must be less than 881 lbs"
       }
-      return value <= 881;
-    },
-    message: `Weight must be less than 400 kg / 881 lbs`,
-  }
-},
+    ]
+  },
 
-weightUnit: {
+  weightUnit: {
     type: String,
     enum: {
       values: ['kg', 'lbs'],
@@ -68,8 +77,8 @@ weightUnit: {
   themeMode: {
     type: String,
     enum: {
-        values: ['light','dark'],
-        message: 'Invalid theme color'
+      values: ['light', 'dark'],
+      message: 'Invalid theme color'
     },
     default: 'light'
   },
@@ -77,7 +86,7 @@ weightUnit: {
   soundMode: {
     type: String,
     enum: {
-      values: ['on','off'],
+      values: ['on', 'off'],
       message: 'Invalid sound mode'
     },
     default: 'off'
@@ -86,129 +95,129 @@ weightUnit: {
   tipsMode: {
     type: String,
     enum: {
-      values:['on','off'],
+      values: ['on', 'off'],
       message: 'Invalid tips mode'
     },
     default: 'off'
   },
 
-profilePicture: {
+  profilePicture: {
     type: String,
-    
-},
 
-upcomingWorkouts: [
+  },
+
+  upcomingWorkouts: [
     {
 
-        _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            default: setId, // Use the function to generate a new ObjectId
-          },
-   workout: {
+      _id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Workout'
-    },
-    date: {
+        default: setId, // Use the function to generate a new ObjectId
+      },
+      workout: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workout'
+      },
+      date: {
         type: Date,
-        
+
+      }
+
     }
+  ],
 
-}
-],
-
-progress: [
+  progress: [
     {
-        _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            default: setId, // Use the function to generate a new ObjectId
-          },
-          date: {
-            type: Date
-          },
-          total: {
-            type: Number
-          },
-          currentWeight: {
-            type: Number
-          },
-         upperBody: {
-            neck: {
-                type: Number
-              },
-              shoulders: {
-                type: Number
-              },
-              chest: {
-                type: Number
-              },
-         },
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: setId, // Use the function to generate a new ObjectId
+      },
+      date: {
+        type: Date
+      },
+      total: {
+        type: Number
+      },
+      currentWeight: {
+        type: Number
+      },
+      upperBody: {
+        neck: {
+          type: Number
+        },
+        shoulders: {
+          type: Number
+        },
+        chest: {
+          type: Number
+        },
+      },
 
-         arms: {
-            arm: {
-                type: Number
-              },
-              forearm: {
-                type: Number
-              },
-              wrist: {
-                type: Number
-              },
-         },
+      arms: {
+        arm: {
+          type: Number
+        },
+        forearm: {
+          type: Number
+        },
+        wrist: {
+          type: Number
+        },
+      },
 
-         middleBody: {
-            waist: {
-                type: Number
-              },
-              hips: {
-                type: Number
-              },
-         },
+      middleBody: {
+        waist: {
+          type: Number
+        },
+        hips: {
+          type: Number
+        },
+      },
 
-         legs: {
-            thigh: {
-                type: Number
-            },
-            calf: {
-                type: Number
-            },
-            ankle: {
-                type: Number
-            }
-         },
+      legs: {
+        thigh: {
+          type: Number
+        },
+        calf: {
+          type: Number
+        },
+        ankle: {
+          type: Number
+        }
+      },
 
-         foldThickness: {
-            abdominal: {
-                type: Number
-            },
-            thigh: {
-                type: Number
-            },
-            triceps: {
-                type: Number
-            },
-            pelvicBone: {
-                type: Number
-            },
-            fats: {
-                type: Number
-            }
-         }
+      foldThickness: {
+        abdominal: {
+          type: Number
+        },
+        thigh: {
+          type: Number
+        },
+        triceps: {
+          type: Number
+        },
+        pelvicBone: {
+          type: Number
+        },
+        fats: {
+          type: Number
+        }
+      }
 
     }
-]
+  ]
 
 })
 
-userSchema.pre('save', async function() {
-    this.password = await bcrypt.hash(this.password,10)
-    })
+userSchema.pre('save', async function () {
+  this.password = await bcrypt.hash(this.password, 10)
+})
 
-    userSchema.methods.validatePassword = async function(password) {
-        const result = await bcrypt.compare(password, this.password);
-        return result;
-    }
-    
+userSchema.methods.validatePassword = async function (password) {
+  const result = await bcrypt.compare(password, this.password);
+  return result;
+}
 
-    const User = mongoose.model('User',userSchema)
-    
-    module.exports = User;
+
+const User = mongoose.model('User', userSchema)
+
+module.exports = User;
