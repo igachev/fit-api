@@ -5,7 +5,8 @@
 <p>This application is built with <strong>Node.js</strong> , <strong>Express</strong> , <strong>MongoDB with mongoose</strong> , <strong>MongoDB Atlas</strong></p>
 
 
-<h2>Link To Fit API: https://fit-api-ehu5.onrender.com</h2>
+<h2>Link To Fit API: https://fit-api-ehu5.onrender.com/workouts</h2>
+<h2>link to the source code for the project made by team of 7 people: https://bitbucket.org/iliata/team-project-react/src/master/ </h2>
 
 
 ### Test Accounts:
