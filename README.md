@@ -50,7 +50,7 @@ CLOUD_API_SECRET=
 
 
 ### Installation:
-1. Clone this repository `git clone https://github.com/react-redux-fitbyside/react.git`
+1. Clone this repository `git clone https://github.com/igachev/fit-api.git`
 2. Go to folder fit-api: `cd fit-api`
 3. Install dependencies: `npm install`
 4. Make sure you created <strong>.env</strong> file in the main directory and populate it with correct variables
